@@ -16,21 +16,23 @@ let rootPosition (board:Board) : Position =
 
 let cellWithMoves (position:Position) = position |> Seq.filter (fun p->p.Value <> None) |> Seq.toList
 
-let whoseTurn (position:Position) : Player =     
-    let notEmptyCells = cellWithMoves position
-    let noughts = notEmptyCells |> List.countBy (fun c->c.Value = Some Nought)
-    let crosses = notEmptyCells |> List.countBy (fun c->c.Value = Some Cross)
-    if noughts <= crosses then Nought else Cross
-
 let moves (position:Position) : seq<Position> = 
+    let whoseTurn position =     
+            let notEmptyCells = cellWithMoves position
+            let noughts = notEmptyCells |> List.countBy (fun c->c.Value = Some Nought)
+            let crosses = notEmptyCells |> List.countBy (fun c->c.Value = Some Cross)
+            if noughts <= crosses then Nought else Cross
+
     let emptyCells = position |> Seq.filter (fun c->c.Value = None)
+    let nonEmptyCells = position |> Seq.filter (fun c->c.Value <> None)
     let player = whoseTurn position;
-    emptyCells 
-    |> Seq.map (fun c->
-        seq{
-            yield {c with Value=Some player}
-            yield! emptyCells |> Seq.filter (fun cc->cc<>c)
-            })
+    emptyCells |> Seq.map (fun c->
+                        seq{
+                            yield {c with Value=Some player}
+                            yield! emptyCells |> Seq.filter (fun cc->cc<>c)
+                            yield! nonEmptyCells
+                            }) 
+    
 
     
 let rec reptree (f:Position->seq<_>) (position:Position) : Node<_> = 
@@ -109,4 +111,31 @@ let evaluate position =
     |> maptree staticEval
     |> maximize
 
-let e0 = rootPosition {X=3;Y=3} |> evaluate
+let makeMove position = (moves position) |> Seq.map (fun p -> ((evaluate p).value, p)) |> Seq.maxBy fst |> snd
+
+let rec repeat (func:('a->'a)) (a0:'a) : seq<'a>   = 
+    let a1 = func a0;
+    seq {
+        yield a1
+        yield! repeat func a1 
+     }
+
+let posToString pos = 
+    let lines = (pos |> Seq.sortBy (fun c->c.X) |> Seq.groupBy (fun c->c.X))
+                |> Seq.map (snd
+                    >> (fun c -> c 
+                                |> Seq.sortBy (fun x->x.Y) 
+                                |> Seq.map (fun x-> match x.Value with
+                                               | Some Nought -> "o|"
+                                               | Some Cross -> "x|"
+                                               | None -> " |") |> String.Concat ))
+    ("\n", lines |> Seq.map (fun x -> x + "\n" + String('-', x |> Seq.length))) |> String.Join
+
+let game = repeat makeMove (rootPosition {X=3;Y=3}) 
+            |> Seq.takeWhile (fun x->staticEval x<>0)
+            |> Seq.map posToString
+            |> Seq.toList
+
+
+
+    
