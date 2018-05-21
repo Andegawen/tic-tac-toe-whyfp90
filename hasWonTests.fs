@@ -2,6 +2,7 @@ module TicTacToeTest
 
 open Xunit
 open FsUnit.Xunit
+open TicTacToeTypes
 open TicTacToe
 
 

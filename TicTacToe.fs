@@ -1,18 +1,8 @@
 module TicTacToe
 
 open System
+open TicTacToeTypes
 
-type Board = {X:int; Y:int}
-type Player = Nought|Cross
-type Cell = {X:int; Y:int; Value:Player option}
-type Position = seq<Cell>
-type Node<'a> = {value:'a; sub:seq<Node<'a>>}
-
-let rootPosition (board:Board) : Position = 
-    let cells = seq{ for x in 0 .. board.X-1 do
-                        for y in 0 .. board.Y-1 do
-                            yield {X=x; Y=y; Value=None}}
-    cells
 
 let cellWithMoves (position:Position) = position |> Seq.filter (fun p->p.Value <> None) |> Seq.toList
 
@@ -111,31 +101,5 @@ let evaluate position =
     |> maptree staticEval
     |> maximize
 
+///Create all possible moves and select the best one
 let makeMove position = (moves position) |> Seq.map (fun p -> ((evaluate p).value, p)) |> Seq.maxBy fst |> snd
-
-let rec repeat (func:('a->'a)) (a0:'a) : seq<'a>   = 
-    let a1 = func a0;
-    seq {
-        yield a1
-        yield! repeat func a1 
-     }
-
-let posToString pos = 
-    let lines = (pos |> Seq.sortBy (fun c->c.X) |> Seq.groupBy (fun c->c.X))
-                |> Seq.map (snd
-                    >> (fun c -> c 
-                                |> Seq.sortBy (fun x->x.Y) 
-                                |> Seq.map (fun x-> match x.Value with
-                                               | Some Nought -> "o|"
-                                               | Some Cross -> "x|"
-                                               | None -> " |") |> String.Concat ))
-    ("\n", lines |> Seq.map (fun x -> x + "\n" + String('-', x |> Seq.length))) |> String.Join
-
-let game = repeat makeMove (rootPosition {X=3;Y=3}) 
-            |> Seq.takeWhile (fun x->staticEval x<>0)
-            |> Seq.map posToString
-            |> Seq.toList
-
-
-
-    
