@@ -66,7 +66,7 @@ let hasWon (cells:list<Cell>) : bool =
     m=2 // 3 points (x) create distance (-) of 2 x - x - x
 
 ///the simplest 1 - won; -1: lost ; 0 - nothing ---> assume that always 3 consecutive marks means win
-let staticEval (position:Position) = 
+let simpleStaticEval (position:Position) = 
     let notEmptyCells = cellWithMoves position
     let hasNoughtsWon = notEmptyCells |> List.filter (fun c->c.Value = Some Nought) |> hasWon
     let hasCrossesWon = notEmptyCells |> List.filter (fun c->c.Value = Some Cross) |> hasWon
@@ -98,8 +98,11 @@ let evaluate position =
     position  
     |> gametree 
     |> prune 5
-    |> maptree staticEval
+    |> maptree simpleStaticEval
     |> maximize
 
 ///Create all possible moves and select the best one
-let makeMove position = (moves position) |> Seq.map (fun p -> ((evaluate p).value, p)) |> Seq.maxBy fst |> snd
+let makeMove position = (moves position) 
+                        |> Seq.map (fun p -> ((evaluate p).value, p)) 
+                        |> Seq.maxBy fst
+                        |> snd
