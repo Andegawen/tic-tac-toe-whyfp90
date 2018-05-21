@@ -3,6 +3,7 @@ module MovesTests
 open Xunit
 open FsUnit.Xunit
 open TicTacToe
+open TicTacToeTypes
 
 
 [<Fact>]
@@ -45,3 +46,17 @@ let ``two cells one cross one empty should be fullfilled with cross`` () =
     generatedCells |> Seq.length |> should equal 1
     let condition = (generatedCells|> Seq.head |> Seq.head) = {X=0;Y=1;Value=Some Nought}
     condition |> should equal true
+
+[<Fact>]
+let ``next move should generate collection of possible positions, but with 1 less of empty cells in it`` () =    
+    let positionWithEmptyCell = seq{
+                                    yield {X=0;Y=0;Value=Some Cross}
+                                    yield {X=0;Y=1;Value=Some Nought}
+                                    yield {X=0;Y=2;Value=None}
+                                    yield {X=0;Y=3;Value=None}
+                                    }
+
+    let generatedCells = moves positionWithEmptyCell
+
+    generatedCells |> Seq.length |> should equal 2
+    generatedCells |> Seq.head |> Seq.filter (fun x->x.Value=None) |> Seq.length |> should equal 1
