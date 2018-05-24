@@ -8,6 +8,7 @@
     <Compile Include="hasWonTests.fs" />
     <Compile Include="movesTests.fs" />
     <Compile Include="simpleStaticEvalTests.fs" />
+    <Compile Include="evaluatePositionTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
