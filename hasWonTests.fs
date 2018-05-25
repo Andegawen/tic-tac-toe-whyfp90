@@ -45,3 +45,10 @@ let ``More than 3 cells on one line but not 3 consecutive ones should return fal
     let arg1 = [1 .. 2] |> List.map (fun y->{cell with Y=cell.Y+y})
     let arg2 = [1 .. 2] |> List.map (fun y->{cell with Y=cell.Y+y+5})
     hasWon (arg1 @ arg2)|> should equal false
+
+
+
+[<Fact>]
+let ``Empty 3x3 board should have no winner`` () = 
+    let emptyPosition = rootPosition {X=3;Y=3}
+    anyWinner (emptyPosition|>Seq.toList) |> should equal false

@@ -60,3 +60,14 @@ let ``next move should generate collection of possible positions, but with 1 les
 
     generatedCells |> Seq.length |> should equal 2
     generatedCells |> Seq.head |> Seq.filter (fun x->x.Value=None) |> Seq.length |> should equal 1
+
+
+[<Fact>]
+let ``1 non-empty cell should return empty seq`` () =    
+    let positionWithEmptyCell = seq{
+                                    yield {X=0;Y=0;Value=Some Cross}
+                                    }
+
+    let generatedCells = moves positionWithEmptyCell
+
+    generatedCells |> Seq.length |> should equal 0

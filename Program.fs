@@ -8,10 +8,22 @@ let rec repeat (func:('a->'a)) (a0:'a) : seq<'a>   =
         yield! repeat func a1 
      }
 
-let game = repeat makeMove (rootPosition {X=3;Y=3}) 
-                |> Seq.take 1
-                |> Seq.map posToString
-                |> Seq.toList
-module Program = let [<EntryPoint>] main _ = 
-    game |> Seq.iter (fun p-> printfn "%s" p)
+let game position = repeat makeMove position 
+                    |> Seq.takeWhile (fun x -> not (anyWinner x))
+                    |> Seq.map posToString
+
+module Program = let [<EntryPoint>] main _ =
+    let x = seq{
+        yield {X=0;Y=0;Value=None} 
+        yield {X=0;Y=1;Value=None}
+        yield {X=0;Y=2;Value=None}
+        yield {X=1;Y=0;Value=None}
+        yield {X=1;Y=1;Value=Some Nought}
+        yield {X=1;Y=2;Value=None}
+        yield {X=2;Y=0;Value=None}
+        yield {X=2;Y=1;Value=None}
+        yield {X=2;Y=2;Value=None}
+    }
+    game x|> Seq.iter (fun p-> printfn "%s\n" p)
+    System.Console.ReadKey()
     0

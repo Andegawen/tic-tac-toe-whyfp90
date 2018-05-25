@@ -11,7 +11,7 @@ let ``Position with no win or no lost evals to 0`` () =
     let positionWithEmptyCell = seq{
                                     yield {X=0;Y=3;Value=None}
                                     }
-    simpleStaticEval positionWithEmptyCell |> should equal 0
+    simpleStaticEval Nought positionWithEmptyCell |> should equal 0
 
 /// x|o| |
 /// x|o| |
@@ -29,7 +29,7 @@ let ``Win evals as 1`` () =
                                     yield {X=1;Y=2;Value=Some Nought}
                                     yield {X=2;Y=2;Value=None}
                                     }
-    simpleStaticEval positionWithEmptyCell |> should equal 1
+    simpleStaticEval Nought positionWithEmptyCell |> should equal 1
 
 /// x|o|o|
 /// x|o| |
@@ -47,4 +47,4 @@ let ``Lost evals to -1`` ()=
                                     yield {X=1;Y=2;Value=None}
                                     yield {X=2;Y=2;Value=None}
                                     }
-    simpleStaticEval positionWithEmptyCell |> should equal -1
+    simpleStaticEval Nought positionWithEmptyCell |> should equal -1
