@@ -21,60 +21,62 @@ let moves (position:Position) : seq<Position> =
                             yield! emptyCells |> Seq.filter (fun cc->cc<>c)
                             yield! nonEmptyCells
                             })
-    
-let hasWon (cells:seq<Cell>) : bool = 
-    let distance c1 c2 : int=Convert.ToInt32((Math.Sqrt(Math.Pow(float (c2.X-c1.X), 2.0) + Math.Pow(float (c2.Y-c1.Y), 2.0))))
-    
-    let rec maxContinuesDistanceOnLine' cellsOnLine (acc:seq<int>) = 
-        match (cellsOnLine,acc) with
-        | (a,acc) when a |> Seq.length >=2 ->
-                            let c1 = a |> Seq.head
-                            let r = a |> Seq.skip 1
-                            let c2 = r |> Seq.head
-                            let rest = r |> Seq.skip 1
-                            let el = Seq.last acc
-                            let tail = Seq.tail acc
-                            if distance c1 c2 = 1 
-                            then maxContinuesDistanceOnLine' (seq{ yield c2; yield! rest}) (seq {yield! tail; yield el+1})
-                            else maxContinuesDistanceOnLine' (seq{ yield c2; yield! rest}) (seq {yield! tail; yield el; yield 0})
-        | (_,_) -> acc
 
-    let maxContinuesDistanceOnLine cellsOnLine : int seq =
-        maxContinuesDistanceOnLine' cellsOnLine [0]
-    
-    let safeSeqMax s = match s with
-        | x when x |> Seq.length = 0 -> 0
-        | a -> Seq.max a
-
-    let maxLineConsecutiveMarks groupLine cells = 
-        cells 
-        |> Seq.groupBy groupLine
-        |> Seq.map (snd >> maxContinuesDistanceOnLine >> safeSeqMax)
-        |> safeSeqMax
-    
-    let verticals = cells |> maxLineConsecutiveMarks (fun c->c.X)
-    let horizontals = cells |> maxLineConsecutiveMarks (fun c->c.Y)
-    //a=1; -> so not important b=y-x
-    let diagonals = cells |> maxLineConsecutiveMarks (fun c->c.Y-c.X)
-    let m = [verticals;horizontals;diagonals] |> List.max
-    m=2 // 3 points (x) create distance (-) of 2 x - x - x
-
-let simpleStaticEval (player:Player) (position:Position) = 
-    let notEmptyCells = cellWithMoves position
-    let hasNoughtsWon = notEmptyCells |> Seq.filter (fun c->c.Value = Some Nought) |> hasWon
-    let hasCrossesWon = notEmptyCells |> Seq.filter (fun c->c.Value = Some Cross) |> hasWon
+let whoWons (position:Position) : Player option  =  
+    let hasWon (cells:seq<Cell>) : bool = 
+        let distance c1 c2 : int=Convert.ToInt32((Math.Sqrt(Math.Pow(float (c2.X-c1.X), 2.0) + Math.Pow(float (c2.Y-c1.Y), 2.0))))
         
-    match (player, hasNoughtsWon, hasCrossesWon) with
-    | (_, false, false) -> 0
-    | (Nought, true, false) -> 1
-    | (Nought, false, true) -> -1
-    | (Cross, true, false) -> -1
-    | (Cross, false, true) -> 1
-    | (_, true, true) -> failwith "Not possible combination when nought and crosses win at the same time"
+        let rec maxContinuesDistanceOnLine' cellsOnLine (acc:seq<int>) = 
+            match (cellsOnLine,acc) with
+            | (a,acc) when a |> Seq.length >=2 ->
+                                let c1 = a |> Seq.head
+                                let r = a |> Seq.skip 1
+                                let c2 = r |> Seq.head
+                                let rest = r |> Seq.skip 1
+                                let el = Seq.last acc
+                                let tail = Seq.tail acc
+                                if distance c1 c2 = 1 
+                                then maxContinuesDistanceOnLine' (seq{ yield c2; yield! rest}) (seq {yield! tail; yield el+1})
+                                else maxContinuesDistanceOnLine' (seq{ yield c2; yield! rest}) (seq {yield! tail; yield el; yield 0})
+            | (_,_) -> acc
+
+        let maxContinuesDistanceOnLine cellsOnLine : int seq =
+            maxContinuesDistanceOnLine' cellsOnLine [0]
+        
+        let safeSeqMax s = match s with
+                            | x when Seq.isEmpty x -> 0
+                            | a -> Seq.max a
+
+        let maxLineConsecutiveMarks lineFunc cells = 
+            cells 
+            |> Seq.groupBy lineFunc
+            |> Seq.map (snd >> Seq.sortBy (fun c->(c.X,c.Y)) >> maxContinuesDistanceOnLine >> safeSeqMax)
+            |> safeSeqMax
+        
+        let verticals = cells |> maxLineConsecutiveMarks (fun c->c.X)
+        let horizontals = cells |> maxLineConsecutiveMarks (fun c->c.Y)
+        //a=1; -> so not important b=y-x
+        let diagonals1 = cells |> maxLineConsecutiveMarks (fun c->c.Y-c.X)
+        let diagonals2 = cells |> maxLineConsecutiveMarks (fun c->c.Y+c.X)
+        let m = seq [verticals;horizontals;diagonals1;diagonals2] |> safeSeqMax
+        m=2 // 3 points (x) create distance (-) of 2 x - x - x
+    let noughtWin = position |> Seq.filter (fun x->x.Value=Some Nought) |> hasWon
+    let crossWin = position |> Seq.filter (fun x->x.Value=Some Cross) |> hasWon
+    match (noughtWin,crossWin) with
+    | true, true -> failwith "not possible combinantion"
+    | true, false -> Some Nought
+    | false, true -> Some Cross
+    | false, false -> None
+
+
+let simpleStaticEval (player:Player) (position:Position) =
+    match (whoWons position) with
+    | None -> 0
+    | Some x -> if x=player then 1 else -1
 
 
 let anyWinner position =
-    (simpleStaticEval Cross position) = 0 |> not
+    (whoWons position) <> None
 
 let rec reptree (f:Position->seq<_>) (position:Position) : Node<_> = 
     match (anyWinner position) with
@@ -112,7 +114,10 @@ let evaluate position (player:Player) =
     |> maximize
 
 ///Create all possible moves and select the best one
-let makeMove position = (moves position) 
-                        |> Seq.map (fun p -> ((evaluate p (whoseTurn position)).value, p)) 
-                        |> Seq.maxBy fst
-                        |> snd
+let makeMove position : Position option = 
+    let z = (moves position)
+            |> Seq.filter (anyWinner >> not)
+            |> Seq.map (fun p -> ((evaluate p (whoseTurn position)).value, p)) 
+    match Seq.isEmpty z with
+    | true -> None
+    | false -> z |> Seq.maxBy fst |> snd |> Some

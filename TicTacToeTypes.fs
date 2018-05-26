@@ -14,9 +14,9 @@ let posToString pos =
                     >> (fun c -> c 
                                 |> Seq.sortBy (fun x->x.Y) 
                                 |> Seq.map (fun x-> match x.Value with
-                                               | Some Nought -> "o|"
-                                               | Some Cross -> "x|"
-                                               | None -> " |") |> String.Concat ))
+                                                       | Some Nought -> "o|"
+                                                       | Some Cross -> "x|"
+                                                       | None -> " |") |> String.Concat ))
     ("\n", lines |> Seq.map (fun x -> x + "\n" + String('-', x |> Seq.length))) |> String.Join
 
 let rootPosition (board:Board) : Position = 

@@ -5,7 +5,7 @@
   <ItemGroup>
     <Compile Include="TicTacToeTypes.fs" />
     <Compile Include="TicTacToe.fs" />
-    <Compile Include="hasWonTests.fs" />
+    <Compile Include="whoWonsTests.fs" />
     <Compile Include="movesTests.fs" />
     <Compile Include="simpleStaticEvalTests.fs" />
     <Compile Include="evaluatePositionTests.fs" />
