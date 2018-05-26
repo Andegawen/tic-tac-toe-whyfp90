@@ -115,9 +115,7 @@ let evaluate position (player:Player) =
 
 ///Create all possible moves and select the best one
 let makeMove position : Position option = 
-    let z = (moves position)
-            |> Seq.filter (anyWinner >> not)
+    if anyWinner position then None else
+            (moves position)
             |> Seq.map (fun p -> ((evaluate p (whoseTurn position)).value, p)) 
-    match Seq.isEmpty z with
-    | true -> None
-    | false -> z |> Seq.maxBy fst |> snd |> Some
+            |> Seq.maxBy fst |> snd |> Some

@@ -1,5 +1,6 @@
 open TicTacToeTypes
 open TicTacToe
+open MovesTests
 
 let rec repeat (func:('a->'a option)) (a0:'a) : seq<'a>   = 
     let a1 = func a0;
@@ -24,7 +25,10 @@ module Program = let [<EntryPoint>] main _ =
                         yield {X=2;Y=1;Value=None}
                         yield {X=2;Y=2;Value=None}
                        }
-    game position|> Seq.iter (posToString >> printfn "%s\n\n")
-    // game x|> Seq.iter (fun p->printfn "seq"; Seq.iter (fun c -> printfn "%A" c) p)
-    printfn "game ended"
+    let g = game position
+    let result x = match (whoWons x) with
+                | None -> "None"
+                | Some x -> sprintf "The winner is %A" x
+    g |> Seq.iter (fun x-> printfn "%s" (result x); printfn "%s\n\n" (posToString x); )
+    // game x|> Seq.iter (fun p->printfn "seq"; Seq.iter (fun c -> printfn "%A" c) p)  
     0
