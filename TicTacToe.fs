@@ -68,7 +68,7 @@ let whoWons (position:Position) : Player option  =
     | false, true -> Some Cross
     | false, false -> None
 
-
+///the simplest 1 - won; -1: lost ; 0 - nothing ---> assume that always 3 consecutive marks means win
 let simpleStaticEval (player:Player) (position:Position) =
     match (whoWons position) with
     | None -> 0
@@ -84,9 +84,7 @@ let rec reptree (f:Position->seq<_>) (position:Position) : Node<_> =
     | false -> {value=position;sub=(f position |> Seq.map (fun p-> reptree f p))}
 
 
-let gametree p = reptree moves p
-
-///the simplest 1 - won; -1: lost ; 0 - nothing ---> assume that always 3 consecutive marks means win
+let gametree position = reptree moves position
 
 //Node<Position> -> Node<int> where int is computed from staticEval
 //maptree f= foldtree (Node. f) Cons Nil
