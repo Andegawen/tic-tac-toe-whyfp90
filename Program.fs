@@ -1,6 +1,5 @@
 open TicTacToeTypes
 open TicTacToe
-open MovesTests
 
 let rec repeat (func:('a->'a option)) (a0:'a) : seq<'a>   = 
     let a1 = func a0;
@@ -13,22 +12,21 @@ let rec repeat (func:('a->'a option)) (a0:'a) : seq<'a>   =
 
 let game position = repeat makeMove position
 
+let gameResultString position = match (whoWons position) with
+                                | None -> "None"
+                                | Some x -> sprintf "The winner is %A" x
+
 module Program = let [<EntryPoint>] main _ =
-    let position = seq {
-                        yield {X=0;Y=0;Value=None} 
-                        yield {X=0;Y=1;Value=None}
-                        yield {X=0;Y=2;Value=None}
-                        yield {X=1;Y=0;Value=None}
-                        yield {X=1;Y=1;Value=Some Nought}
-                        yield {X=1;Y=2;Value=None}
-                        yield {X=2;Y=0;Value=None}
-                        yield {X=2;Y=1;Value=None}
-                        yield {X=2;Y=2;Value=None}
-                       }
-    let g = game position
-    let result x = match (whoWons x) with
-                | None -> "None"
-                | Some x -> sprintf "The winner is %A" x
-    g |> Seq.iter (fun x-> printfn "%s" (result x); printfn "%s\n\n" (posToString x); )
-    // game x|> Seq.iter (fun p->printfn "seq"; Seq.iter (fun c -> printfn "%A" c) p)  
+    let initialPosition = [
+                            {X=0;Y=0;Value=None} 
+                            {X=0;Y=1;Value=None}
+                            {X=0;Y=2;Value=None}
+                            {X=1;Y=0;Value=None}
+                            {X=1;Y=1;Value=Some Nought}
+                            {X=1;Y=2;Value=None}
+                            {X=2;Y=0;Value=None}
+                            {X=2;Y=1;Value=None}
+                            {X=2;Y=2;Value=None}
+                          ]
+    game initialPosition |> Seq.iter (fun x-> printfn "%s" (gameResultString x); printfn "%s\n\n" (posToString x); )
     0
