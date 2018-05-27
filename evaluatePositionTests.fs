@@ -49,3 +49,63 @@ let ``The lost evals as -1`` () =
                                     yield {X=2;Y=2;Value=None}
                                     }
     (evaluate positionWithEmptyCell Nought).value |> should equal -1
+
+
+let evaluations : obj array seq= 
+    seq [
+/// o|x|o|
+/// ------
+/// x|o| |
+/// ------
+///  | | |
+/// ------
+          [|-1;seq[
+                {X=0;Y=0;Value=Some Nought} 
+                {X=0;Y=1;Value=Some Cross}
+                {X=0;Y=2;Value=Some Nought}
+                {X=1;Y=0;Value=Some Cross}
+                {X=1;Y=1;Value=Some Nought}
+                {X=1;Y=2;Value=None}
+                {X=2;Y=0;Value=None}
+                {X=2;Y=1;Value=None}
+                {X=2;Y=2;Value=None}          
+               ]|]
+/// o|x|o|
+/// ------
+/// x| | |
+/// ------
+///  | | |
+/// ------
+          [|1;seq[
+                {X=0;Y=0;Value=Some Nought} 
+                {X=0;Y=1;Value=Some Cross}
+                {X=0;Y=2;Value=Some Nought}
+                {X=1;Y=0;Value=Some Cross}
+                {X=1;Y=1;Value=None}
+                {X=1;Y=2;Value=None}
+                {X=2;Y=0;Value=None}
+                {X=2;Y=1;Value=None}
+                {X=2;Y=2;Value=None}          
+               ]|]
+/// o|x|o|
+/// ------
+///  | | |
+/// ------
+///  | | |
+/// ------
+          [|1;seq[
+                {X=0;Y=0;Value=Some Nought} 
+                {X=0;Y=1;Value=Some Cross}
+                {X=0;Y=2;Value=Some Nought}
+                {X=1;Y=0;Value=None}
+                {X=1;Y=1;Value=None}
+                {X=1;Y=2;Value=None}
+                {X=2;Y=0;Value=None}
+                {X=2;Y=1;Value=None}
+                {X=2;Y=2;Value=None}          
+               ]|]
+    ]
+
+[<Theory; MemberData("evaluations")>]
+let ``Interesting evaluations`` (expected : int, position : Position) = 
+    (evaluate position (whoseTurn position)).value |> should equal expected
