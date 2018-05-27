@@ -30,3 +30,4 @@ module Program = let [<EntryPoint>] main _ =
                           ]
     game initialPosition |> Seq.iter (fun x-> printfn "%s" (gameResultString x); printfn "%s\n\n" (posToString x); )
     0
+    

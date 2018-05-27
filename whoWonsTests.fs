@@ -41,15 +41,15 @@ let diagonalPositions : obj array seq=
           //x| | |
           //------
           [|seq[
-            {X = 2; Y = 0; Value = None;};
-            {X = 2; Y = 1; Value = None;}
-            {X = 2; Y = 2; Value = Some Cross;}
-            {X = 1; Y = 0; Value = None;}
-            {X = 1; Y = 1;  Value = Some Cross;}
-            {X = 1; Y = 2; Value = None;}
-            {X = 0; Y = 0;  Value = Some Cross;}
-            {X = 0; Y = 1; Value = None;}
-            {X = 0; Y = 2;  Value = None ;}]|]
+                {X = 2; Y = 0; Value = None;};
+                {X = 2; Y = 1; Value = None;}
+                {X = 2; Y = 2; Value = Some Cross;}
+                {X = 1; Y = 0; Value = None;}
+                {X = 1; Y = 1;  Value = Some Cross;}
+                {X = 1; Y = 2; Value = None;}
+                {X = 0; Y = 0;  Value = Some Cross;}
+                {X = 0; Y = 1; Value = None;}
+                {X = 0; Y = 2;  Value = None ;}]|]
           //x| | |
           //------
           // |x| |
@@ -57,15 +57,15 @@ let diagonalPositions : obj array seq=
           // | |x|
           //------
           [|seq[
-            {X = 2; Y = 0; Value = Some Cross;}
-            {X = 2; Y = 1; Value = None;}
-            {X = 2; Y = 2; Value = None;}
-            {X = 1; Y = 0; Value = None;}
-            {X = 1; Y = 1;  Value = Some Cross;}
-            {X = 1; Y = 2; Value = None;}
-            {X = 0; Y = 0;  Value = None;}
-            {X = 0; Y = 1; Value = None;}
-            {X = 0; Y = 2;  Value = Some Cross;}]|]
+                {X = 2; Y = 0; Value = Some Cross;}
+                {X = 2; Y = 1; Value = None;}
+                {X = 2; Y = 2; Value = None;}
+                {X = 1; Y = 0; Value = None;}
+                {X = 1; Y = 1;  Value = Some Cross;}
+                {X = 1; Y = 2; Value = None;}
+                {X = 0; Y = 0;  Value = None;}
+                {X = 0; Y = 1; Value = None;}
+                {X = 0; Y = 2;  Value = Some Cross;}]|]
     ]
 
 [<Theory; MemberData("diagonalPositions")>]
