@@ -31,12 +31,46 @@ let ``3 cells of the same player in distance of 1 in vertical should return that
     let arg = [1 .. 3] |> List.map (fun y->{cell with Y=cell.Y+y})
     whoWons arg|> should equal (Some Nought)
 
-[<Fact>]
-let ``3 cells of the same player in distance of 1 in diagonal should return that player as winner`` () = 
-     let cell = {X=3;Y=5;Value=Some Nought}
-     let arg = [1 .. 3] |> List.map (fun y->{cell with Y=cell.Y+y})
-     whoWons arg|> should equal (Some Nought)
 
+let diagonalPositions : obj array seq= 
+    seq [
+          // | |x|
+          //------
+          // |x| |
+          //------
+          //x| | |
+          //------
+          [|seq[
+            {X = 2; Y = 0; Value = None;};
+            {X = 2; Y = 1; Value = None;}
+            {X = 2; Y = 2; Value = Some Cross;}
+            {X = 1; Y = 0; Value = None;}
+            {X = 1; Y = 1;  Value = Some Cross;}
+            {X = 1; Y = 2; Value = None;}
+            {X = 0; Y = 0;  Value = Some Cross;}
+            {X = 0; Y = 1; Value = None;}
+            {X = 0; Y = 2;  Value = None ;}]|]
+          //x| | |
+          //------
+          // |x| |
+          //------
+          // | |x|
+          //------
+          [|seq[
+            {X = 2; Y = 0; Value = Some Cross;}
+            {X = 2; Y = 1; Value = None;}
+            {X = 2; Y = 2; Value = None;}
+            {X = 1; Y = 0; Value = None;}
+            {X = 1; Y = 1;  Value = Some Cross;}
+            {X = 1; Y = 2; Value = None;}
+            {X = 0; Y = 0;  Value = None;}
+            {X = 0; Y = 1; Value = None;}
+            {X = 0; Y = 2;  Value = Some Cross;}]|]
+    ]
+
+[<Theory; MemberData("diagonalPositions")>]
+let ``diagonals filled with the same mark should return that player as winner`` (position : Position) = 
+    whoWons position|> should equal (Some Cross)
 
 
 [<Fact>]
@@ -46,51 +80,6 @@ let ``More than 3 cells on one line but not 3 consecutive shouldn't have a winne
     let arg2 = [1 .. 2] |> List.map (fun y->{cell with Y=cell.Y+y+5})
     whoWons (arg1 @ arg2)|> should equal None
 
-
-///x|o|x|
-///------
-///o|o|x|
-///------
-///o| | |
-///------
-[<Fact>]
-let ``last position in the game`` () = 
-    let position = seq{
-        yield {X = 2; Y = 0; Value = Some Nought;}
-        yield {X = 2; Y = 1; Value = None;}
-        yield {X = 2; Y = 2; Value = None;}
-        yield {X = 1; Y = 0; Value = Some Nought;}
-        yield {X = 1; Y = 1;  Value = Some Nought;}
-        yield {X = 1; Y = 2; Value = Some Cross;}
-        yield {X = 0; Y = 0;  Value = Some Cross;}
-        yield {X = 0; Y = 1; Value = Some Nought;}
-        yield {X = 0; Y = 2;  Value = Some Cross;}
-        
-    }
-    whoWons position |> should equal None
-
-
-///x|o|x|
-///------
-/// |o| |
-///------
-/// | | |
-///------
-[<Fact>]
-let ``last position in the game2`` () = 
-    let position = seq{
-        yield {X = 2; Y = 0; Value = None;}
-        yield {X = 2; Y = 1; Value = None;}
-        yield {X = 2; Y = 2; Value = None;}
-        yield {X = 1; Y = 0; Value = None;}
-        yield {X = 1; Y = 1;  Value = Some Nought;}
-        yield {X = 1; Y = 2; Value = None;}
-        yield {X = 0; Y = 0;  Value = Some Cross;}
-        yield {X = 0; Y = 1; Value = Some Nought;}
-        yield {X = 0; Y = 2;  Value = Some Cross;}
-        
-    }
-    whoWons position |> should equal None
 
 [<Fact>]
 let ``Empty 3x3 board should have no winner`` () = 
