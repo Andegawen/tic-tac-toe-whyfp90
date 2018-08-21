@@ -2,8 +2,8 @@ module MovesTests
 
 open Xunit
 open FsUnit.Xunit
-open TicTacToe
-open TicTacToeTypes
+open Game
+open Domain
 
 
 [<Fact>]

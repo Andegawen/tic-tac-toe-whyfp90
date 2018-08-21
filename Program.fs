@@ -1,5 +1,5 @@
-open TicTacToeTypes
-open TicTacToe
+open Domain
+open Game
 
 let rec repeat (func:('a->'a option)) (a0:'a) : seq<'a>   = 
     let a1 = func a0;

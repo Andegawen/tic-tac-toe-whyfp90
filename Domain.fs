@@ -1,4 +1,4 @@
-module TicTacToeTypes
+module Domain
 
 open System
 

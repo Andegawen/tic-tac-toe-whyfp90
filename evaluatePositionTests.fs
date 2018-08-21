@@ -2,9 +2,10 @@ module EvaluatePositionTests
 
 open Xunit
 open FsUnit.Xunit
-open TicTacToeTypes
-open TicTacToe
+open Domain
+open Game
 
+let toSeq str = Seq.empty
 
 [<Fact>]
 let ``empty 3x3 position evaluates to 0`` () =

@@ -1,7 +1,7 @@
-module TicTacToe
+module Game
 
 open System
-open TicTacToeTypes
+open Domain
 
 
 let cellWithMoves (position:Position) = position |> Seq.filter (fun p->p.Value <> None)

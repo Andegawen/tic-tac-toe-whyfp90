@@ -2,8 +2,8 @@ module SimpleStaticEvalTests
 
 open Xunit
 open FsUnit.Xunit
-open TicTacToeTypes
-open TicTacToe
+open Domain
+open Game
 
 
 [<Fact>]

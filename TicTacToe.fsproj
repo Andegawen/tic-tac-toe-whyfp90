@@ -3,8 +3,8 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="TicTacToeTypes.fs" />
-    <Compile Include="TicTacToe.fs" />
+    <Compile Include="Domain.fs" />
+    <Compile Include="Game.fs" />
     <Compile Include="whoWonsTests.fs" />
     <Compile Include="movesTests.fs" />
     <Compile Include="simpleStaticEvalTests.fs" />
