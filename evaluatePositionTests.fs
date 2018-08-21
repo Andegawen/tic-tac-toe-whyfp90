@@ -4,8 +4,7 @@ open Xunit
 open FsUnit.Xunit
 open Domain
 open Game
-
-let toSeq str = Seq.empty
+open Utilities
 
 [<Fact>]
 let ``empty 3x3 position evaluates to 0`` () =
@@ -14,52 +13,28 @@ let ``empty 3x3 position evaluates to 0`` () =
 
 
 
-/// x|o| |
-/// x|o| |
-///  |o| |
 [<Fact>]
 let ``Win evals as 1`` () = 
-    let positionWithEmptyCell = seq{
-                                    yield {X=0;Y=0;Value=Some Cross} 
-                                    yield {X=1;Y=0;Value=Some Nought}
-                                    yield {X=2;Y=0;Value=None}
-                                    yield {X=0;Y=1;Value=Some Cross}
-                                    yield {X=1;Y=1;Value=Some Nought}
-                                    yield {X=2;Y=1;Value=None}
-                                    yield {X=0;Y=2;Value=None}
-                                    yield {X=1;Y=2;Value=Some Nought}
-                                    yield {X=2;Y=2;Value=None}
-                                    }
+    let positionWithEmptyCell = "X|O| \n"
+                              + "X|O| \n"
+                              + " |O| " |> toSeq
+    printfn " lubie misie2 %A" (positionWithEmptyCell |> Seq.toList)
     (evaluate positionWithEmptyCell Nought).value |> should equal 1
 
 
-/// x|o|o|
-/// x|o| |
-/// x| | |
 [<Fact>]
 let ``The lost evals as -1`` () = 
-    let positionWithEmptyCell = seq{
-                                    yield {X=0;Y=0;Value=Some Cross} 
-                                    yield {X=1;Y=0;Value=Some Nought}
-                                    yield {X=2;Y=0;Value=Some Nought}
-                                    yield {X=0;Y=1;Value=Some Cross}
-                                    yield {X=1;Y=1;Value=Some Nought}
-                                    yield {X=2;Y=1;Value=None}
-                                    yield {X=0;Y=2;Value=Some Cross}
-                                    yield {X=1;Y=2;Value=None}
-                                    yield {X=2;Y=2;Value=None}
-                                    }
+    let positionWithEmptyCell = "x|o|o\n"
+                              + "x|o| \n"
+                              + "x| | " |> toSeq
     (evaluate positionWithEmptyCell Nought).value |> should equal -1
 
 
 let evaluations : obj array seq= 
     seq [
 /// o|x|o|
-/// ------
 /// x|o| |
-/// ------
 ///  | | |
-/// ------
           [|-1;seq[
                 {X=0;Y=0;Value=Some Nought} 
                 {X=0;Y=1;Value=Some Cross}
@@ -72,11 +47,8 @@ let evaluations : obj array seq=
                 {X=2;Y=2;Value=None}          
                ]|]
 /// o|x|o|
-/// ------
 /// x| | |
-/// ------
 ///  | | |
-/// ------
           [|1;seq[
                 {X=0;Y=0;Value=Some Nought} 
                 {X=0;Y=1;Value=Some Cross}
@@ -89,11 +61,8 @@ let evaluations : obj array seq=
                 {X=2;Y=2;Value=None}          
                ]|]
 /// o|x|o|
-/// ------
 ///  | | |
-/// ------
 ///  | | |
-/// ------
           [|1;seq[
                 {X=0;Y=0;Value=Some Nought} 
                 {X=0;Y=1;Value=Some Cross}
