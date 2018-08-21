@@ -18,7 +18,7 @@ let ``Position with no win or no lost evals to 0`` () =
 let ``Win evals as 1`` () = 
     let positionWithEmptyCell =   "X|O| \n"
                                 + "X|O| \n"
-                                + " |O| " |> toSeq
+                                + " |O| " |> strBoardToSeq
     
     simpleStaticEval Nought positionWithEmptyCell |> should equal 1
 
@@ -26,6 +26,6 @@ let ``Win evals as 1`` () =
 let ``Lost evals to -1`` ()= 
     let positionWithEmptyCell = "X|O|O\n"
                               + "X|O| \n"
-                              + "X| | " |> toSeq
+                              + "X| | " |> strBoardToSeq
      
     simpleStaticEval Nought positionWithEmptyCell |> should equal -1

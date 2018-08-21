@@ -17,7 +17,7 @@ let ``empty 3x3 position evaluates to 0`` () =
 let ``Win evals as 1`` () = 
     let positionWithEmptyCell = "X|O| \n"
                               + "X|O| \n"
-                              + " |O| " |> toSeq
+                              + " |O| " |> strBoardToSeq
     printfn " lubie misie2 %A" (positionWithEmptyCell |> Seq.toList)
     (evaluate positionWithEmptyCell Nought).value |> should equal 1
 
@@ -26,7 +26,7 @@ let ``Win evals as 1`` () =
 let ``The lost evals as -1`` () = 
     let positionWithEmptyCell = "x|o|o\n"
                               + "x|o| \n"
-                              + "x| | " |> toSeq
+                              + "x| | " |> strBoardToSeq
     (evaluate positionWithEmptyCell Nought).value |> should equal -1
 
 

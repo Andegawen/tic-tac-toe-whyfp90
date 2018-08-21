@@ -11,7 +11,7 @@ let strToPlayer str =
     | "o" -> Some Nought
     | _ -> None
 
-let toSeq (str:String) = 
+let strBoardToSeq (str:String) = 
     let rows = str.Split('\n')
     rows 
     |> Seq.mapi (fun y r-> let values = r.Split('|')
