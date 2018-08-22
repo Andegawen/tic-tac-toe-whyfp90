@@ -1,7 +1,9 @@
-﻿#load "TicTacToeTypes.fs"
-#load "TicTacToe.fs"
-open TicTacToeTypes
-open TicTacToe
+﻿#load "Domain.fs"
+#load "Game.fs"
+#load "Utilities.fs"
+open Domain
+open Game
+open Utilities
 
 
 let evaluate2 position (player:Player) =

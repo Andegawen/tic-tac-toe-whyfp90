@@ -32,48 +32,18 @@ let ``The lost evals as -1`` () =
 
 let evaluations : obj array seq= 
     seq [
-/// o|x|o|
-/// x|o| |
-///  | | |
-          [|-1;seq[
-                {X=0;Y=0;Value=Some Nought} 
-                {X=0;Y=1;Value=Some Cross}
-                {X=0;Y=2;Value=Some Nought}
-                {X=1;Y=0;Value=Some Cross}
-                {X=1;Y=1;Value=Some Nought}
-                {X=1;Y=2;Value=None}
-                {X=2;Y=0;Value=None}
-                {X=2;Y=1;Value=None}
-                {X=2;Y=2;Value=None}          
-               ]|]
-/// o|x|o|
-/// x| | |
-///  | | |
-          [|1;seq[
-                {X=0;Y=0;Value=Some Nought} 
-                {X=0;Y=1;Value=Some Cross}
-                {X=0;Y=2;Value=Some Nought}
-                {X=1;Y=0;Value=Some Cross}
-                {X=1;Y=1;Value=None}
-                {X=1;Y=2;Value=None}
-                {X=2;Y=0;Value=None}
-                {X=2;Y=1;Value=None}
-                {X=2;Y=2;Value=None}          
-               ]|]
-/// o|x|o|
-///  | | |
-///  | | |
-          [|1;seq[
-                {X=0;Y=0;Value=Some Nought} 
-                {X=0;Y=1;Value=Some Cross}
-                {X=0;Y=2;Value=Some Nought}
-                {X=1;Y=0;Value=None}
-                {X=1;Y=1;Value=None}
-                {X=1;Y=2;Value=None}
-                {X=2;Y=0;Value=None}
-                {X=2;Y=1;Value=None}
-                {X=2;Y=2;Value=None}          
-               ]|]
+
+          [|-1; "o|x|o\n"+
+                "x|o| \n"+
+                " | | " |> strBoardToSeq |]
+
+          [|1;  "o|x|o\n"+
+                "x| | \n"+
+                " | | " |> strBoardToSeq |]
+
+          [|1;  "o|x|o\n"+
+                " | | \n"+
+                " | | " |> strBoardToSeq |]
     ]
 
 [<Theory; MemberData("evaluations")>]
